@@ -8,7 +8,8 @@ dog_appの開発記録をここに残します。
 https://www.youtube.com/watch?v=MZclBqhCB6A
 
 
-##　環境構築の流れ
+
+## 環境構築の流れ
 
 流れとしては、次のように開発環境を構築していきます。
 
@@ -26,12 +27,12 @@ $ npx create-next-app@latest --typescript
 
 Next.jsインストール時に聞かれる項目については以下のように回答しました。
 
-✔ What is your project named? … dog_app
-✔ Would you like to use ESLint? … No / Yes
-✔ Would you like to use Tailwind CSS? … No / Yes
-✔ Would you like to use `src/` directory? … No / Yes
-✔ Would you like to use App Router? (recommended) … No / Yes
-✔ Would you like to customize the default import alias (@/*)? … No / Yes
+- ✔ What is your project named? … dog_app
+- ✔ Would you like to use ESLint? … No / Yes
+- ✔ Would you like to use Tailwind CSS? … No / Yes
+- ✔ Would you like to use `src/` directory? … No / Yes
+- ✔ Would you like to use App Router? (recommended) … No / Yes
+- ✔ Would you like to customize the default import alias (@/*)? … No / Yes
 
 - pageRouterを使います。
 - TailwindCSSは使いません。
