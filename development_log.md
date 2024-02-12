@@ -104,8 +104,73 @@ https://zenn.dev/likr/articles/6be53ca64f29aa035f07
 https://typescriptbook.jp/tutorials/nextjs
 
 
+## Dog APIを取得する実装
+
+続いて、DogApiによる画像取得の機能を実装します。
+
+***柴犬の画像は19枚しかなかった***
+
+- このAPIの使い方がよく分からないので、自力で画像枚数を調べたところ、柴犬画像のidは`1~19`までであることがわかった。
+- これをもとに1〜19までのidをランダムで生成する関数`const random`を定義しました。
+- いったん`console.log`で出力してみます。
+- 場所はいったん、Homeページコンポーネントの外に配置しました。
+- メソッド`Math.random`は0未満の小数点以下の数値をランダムで生成するJavaScriptの標準メソッド。
+- メソッド`Math.floor`は小数点以下の数値を整数に直すJavaScriptの標準メソッドとなります。
+- TypeScriptはJavaScriptの上位互換であるため、素のJavaScript構文も使用できます。
+- ただし`var`は現在はあまり使われないようなので、`const`で定義しました。
 
 
+```tsx
+const random = Math.floor( Math.random() * 19 ) + 1;
+console.log( random );
+```
+
+<img src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/3486945/9fa9a97f-c1e8-123c-8faa-96c31a017407.jpeg" alt="" width=50% height=50%>
+
+<img src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/3486945/47bf7b61-2a9d-e95f-6bb3-e8f0dc78fbd0.jpeg" alt="" width=50% height=50%>
+
+- 上記のように、最小値が1、最大値が19までのランダムな数値を取得することができました。
+- この変数を、dog apiのURLのid部分に式展開して代入すれば良さそうです。
+
+***わかった！URLはこれだ！***
+
+- やはり上記のやり方は違うっぽい。
+- このURLがが正しいようだ。
+- https://dog.ceo/api/breed/shiba/images/random/1
+- URLの`rondom`は文字通りランダムに取得する。
+- 最後の`1`は返してくれるJSON情報の数を表しているようだ。
+- 返すのはランダムな1枚だけでよいので、`1`とすれば良さそうだ。
+- 一旦、先に実装したランダムな数値を返す`Math.random`ロジックはコメントアウトしておきます。
+
+
+***DogApiによる画像取得***
+
+- ボタンを押すとAPIから画像を取得するようにしたい
+- まずはbuttonタグにonClick属性を付与し、そこに関数を渡す
+- 関数はfetchDogImageとして、APIからURLを取ってくる
+- 上記の正しいURLにアクセスすると、APIが叩かれてJSON形式のデータがレスポンスされる。
+
+```json
+{
+    "message":["https:\/\/images.dog.ceo\/breeds\/shiba\/shiba-13.jpg"],
+    "status":"success"
+}
+```
+
+- レスポンスのJSONデータを`result`変数に代入
+- `console.log(result.mesasge[0]);`とすることで、URLだけを抽出できた。
+
+
+<img src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/3486945/7ae155cf-771b-9da8-ef36-afac5b1f72ea.jpeg" alt="" width=50% height=50%>
+
+
+
+***今回のコミット内容***
+
+- 未使用のコンポーネントの`import文`を削除
+- `DogApi`による画像URLの取得機能を実装
+    - 関数`fetchDogImage`を定義
+    - ランダムな数値を取得する`Math.random`ロジックは一旦コメントアウト
 
 
 
