@@ -165,12 +165,72 @@ console.log( random );
 
 
 
-***今回のコミット内容***
+***ここまでののコミット内容***
 
 - 未使用のコンポーネントの`import文`を削除
 - `DogApi`による画像URLの取得機能を実装
     - 関数`fetchDogImage`を定義
     - ランダムな数値を取得する`Math.random`ロジックは一旦コメントアウト
+
+
+<br>
+
+***handleClick関数を定義***
+
+- `onClick`属性から渡す関数を`fetchDogImage`から`handleClick`に変更します。
+- 新たに定義した`handleClick`の中で`fetchDogImage`を呼び出すようにします。
+- 最初から`handleClick`で定義しても良い気はするけれど、まぁ、これまでに学習した通りにやります。
+- たぶん、このようにする理由としては、Clickに対するイベント処理と、画像を取得するというイベント、それぞれの役割を明確に分ける意味合いが強いというと思います。
+- 定義する場所は、一旦、ページコンポーネント`Home`の外側に記述しておきます。
+- 本来は中の方が良さそうだけれど、一旦、`fetchDogImage`と同じ場所に定義しておきます。必要なら後でリファクタリングします。
+- `console.log(result.message[0]);`としていた`fetchDogImage`の出力をコメントアウトします。
+- コメントアウトした代わりに、`return result.message[0];`として結果を返すだけにして、出力は`handleClick`のほうに記述します。
+- 一旦、こんな感じに仕上がりました。
+
+
+```typescript
+const fetchDogImage = async () => {
+  const res = await fetch("https://dog.ceo/api/breed/shiba/images/random/1");
+  const result = await res.json();
+  // console.log(result.message[0]);
+  return result.message[0];
+};
+
+const handleClick = async () => {
+  const dogImage = await fetchDogImage();
+  console.log(dogImage);
+};
+
+const Home: NextPage = () => {
+  return (
+    <div className={styles.container}>
+      <h1>今日のHACHI</h1>
+      <img src="https://images.dog.ceo/breeds/shiba/shiba-1.jpg" alt="shiba image" />
+      <button onClick={handleClick}>ワンワン !</button>
+    </div>
+  );
+};
+```
+
+- なお、`async`や`await`といったメソッドはJavaScriptの機能。
+- 使い方については、こちらの記事が参考になりました。
+
+
+https://www.sejuku.net/blog/69618
+
+
+***ここまでののコミット内容***
+
+- 【Add】DogApiによる画像URLの取得機能を実装02
+  - `handleClick`関数を定義
+  - `onClick`の渡す関数を`fetchDogImage`から`handleClick`に変更
+  - ここまでの開発記録を更新
+
+
+
+
+
+
 
 
 
