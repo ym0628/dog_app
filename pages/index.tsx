@@ -10,7 +10,13 @@ const inter = Inter({ subsets: ["latin"] });
 const fetchDogImage = async () => {
   const res = await fetch("https://dog.ceo/api/breed/shiba/images/random/1");
   const result = await res.json();
-  console.log(result.message[0]);
+  // console.log(result.message[0]);
+  return result.message[0];
+};
+
+const handleClick = async () => {
+  const dogImage = await fetchDogImage();
+  console.log(dogImage);
 };
 
 const Home: NextPage = () => {
@@ -18,7 +24,7 @@ const Home: NextPage = () => {
     <div className={styles.container}>
       <h1>今日のHACHI</h1>
       <img src="https://images.dog.ceo/breeds/shiba/shiba-1.jpg" alt="shiba image" />
-      <button onClick={fetchDogImage}>ワンワン !</button>
+      <button onClick={handleClick}>ワンワン !</button>
     </div>
   );
 };
