@@ -227,11 +227,38 @@ https://www.sejuku.net/blog/69618
   - ここまでの開発記録を更新
 
 
+<br>
+
+***APIによる画像取得の関数にTypeScriptで型を指定する***
+
+- `fetchDogImage`に対して、TypeScriptで型を指定します。
+- この実装は、TypeScriptの特長を生かして静的型付けをすることで、保守性・セキュリティ性を高める意味があります。
+- まずは`interface SearchDogImage `という関数を定義し、そこに`キー`と`データ型`を記述していきます。
+- 場所はページコンポーネント関数の外側上に配置します。
+- ここで定義して`SearchDogImage`は`Generics(ジェネリックス)`と呼ばれ、複数のデータ型を含んだお手製の関数として利用できます。
+- `fetchDogImage`のアロー関数の引数?にPromiseメソッドを記述します。
+- そして`<SearchDogImage>`とすることで、その関数で定義されたデータ型のものだけを呼び出せるように制限を設けることができます。
+- このように記述することで、コンパイル〜ブラウザ出力となる前にエラーに気づけるようになる、といったメリットが生まれます。
 
 
+```typescript
+interface SeachDogImage {
+  message: string;
+  status: string;
+}
 
+const fetchDogImage = async (): Promise<SeachDogImage> => {
+  const res = await fetch("https://dog.ceo/api/breed/shiba/images/random/1");
+  const result = await res.json();
+  return result.message[0];
+};
+```
 
-
+***ここまでののコミット内容***
+- 【Add】DogApiによる画像URLの取得機能を実装03
+  - 型注釈`interface SearchDogImage`を定義
+  - `fetchDogImage`関数に`Promise`型でジェネリックス`SearchDogImage`を指定
+  - ここまでの開発記録を`development_log.md`に追記
 
 
 
