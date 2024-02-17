@@ -5,10 +5,10 @@ import { useState } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
-interface SeachDogImage {
-  message: string;
-  status: string;
-}
+// interface SearchDogImage {
+//   message: string;
+//   status: string;
+// }
 
 // const random = Math.floor( Math.random() * 19 ) + 1;
 // console.log( random );
@@ -16,7 +16,7 @@ interface SeachDogImage {
 const Home: NextPage = () => {
   const [dogImageUrl, setDogImageUrl] = useState("");
 
-  const fetchDogImage = async (): Promise<SeachDogImage> => {
+  const fetchDogImage = async (): Promise<string> => {
     const res = await fetch("https://dog.ceo/api/breed/shiba/images/random/1");
     const result = await res.json();
     return result.message[0];
@@ -24,7 +24,6 @@ const Home: NextPage = () => {
   
   const handleClick = async () => {
     const dogImage = await fetchDogImage();
-    // console.log(dogImage);
     setDogImageUrl(dogImage);
   };
   
