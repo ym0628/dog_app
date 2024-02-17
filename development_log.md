@@ -108,7 +108,7 @@ https://typescriptbook.jp/tutorials/nextjs
 
 続いて、DogApiによる画像取得の機能を実装します。
 
-***柴犬の画像は19枚しかなかった***
+### ***柴犬の画像は19枚しかなかった***
 
 - このAPIの使い方がよく分からないので、自力で画像枚数を調べたところ、柴犬画像のidは`1~19`までであることがわかった。
 - これをもとに1〜19までのidをランダムで生成する関数`const random`を定義しました。
@@ -132,7 +132,7 @@ console.log( random );
 - 上記のように、最小値が1、最大値が19までのランダムな数値を取得することができました。
 - この変数を、dog apiのURLのid部分に式展開して代入すれば良さそうです。
 
-***わかった！URLはこれだ！***
+### ***わかった！URLはこれだ！***
 
 - やはり上記のやり方は違うっぽい。
 - このURLがが正しいようだ。
@@ -143,7 +143,7 @@ console.log( random );
 - 一旦、先に実装したランダムな数値を返す`Math.random`ロジックはコメントアウトしておきます。
 
 
-***DogApiによる画像取得***
+### ***DogApiによる画像取得***
 
 - ボタンを押すとAPIから画像を取得するようにしたい
 - まずはbuttonタグにonClick属性を付与し、そこに関数を渡す
@@ -175,7 +175,7 @@ console.log( random );
 
 <br>
 
-***handleClick関数を定義***
+### ***handleClick関数を定義***
 
 - `onClick`属性から渡す関数を`fetchDogImage`から`handleClick`に変更します。
 - 新たに定義した`handleClick`の中で`fetchDogImage`を呼び出すようにします。
@@ -229,7 +229,7 @@ https://www.sejuku.net/blog/69618
 
 <br>
 
-***APIによる画像取得の関数にTypeScriptで型を指定する***
+### ***APIによる画像取得の関数にTypeScriptで型を指定する***
 
 - `fetchDogImage`に対して、TypeScriptで型を指定します。
 - この実装は、TypeScriptの特長を生かして静的型付けをすることで、保守性・セキュリティ性を高める意味があります。
@@ -259,6 +259,108 @@ const fetchDogImage = async (): Promise<SeachDogImage> => {
   - 型注釈`interface SearchDogImage`を定義
   - `fetchDogImage`関数に`Promise`型でジェネリックス`SearchDogImage`を指定
   - ここまでの開発記録を`development_log.md`に追記
+
+<br>
+
+### ***ボタンクリックの度にAPIで画像を取得 & 出力する実装***
+
+- 状態変数を取り扱うためのReact機能`useState`をここで扱います。
+- `useState`の使い方については、こちらの記事が大変参考になりました。
+
+https://zenn.dev/pu_ay/articles/99df8c9175a5f0
+
+
+- ボタンを押すたびにAPI取得した画像を更新出力する実装します。
+- まずはreturn文の`<img src>`タグに状態変数`dogImageUrl`を定義します。
+
+```tsx
+<img src={dogImageUrl} alt="shiba image" />
+```
+
+- `React`関数の`useState`を定義します。（これはuseStateを記述すると自動補完されます。）
+- 記述する場所はページコンポーネント関数の内部です。（ただし、return文の中に直接ロジックを記述するのはNGです。）
+- `useState`の引数はいったん空の状態で実装しておきます。（のちに実装するSSRを実現する際にココの第二引数の空配列に変数を記述する予定です。）
+- `useState`の引数の中身をを一旦、空の状態にしておく際は、ダブルクォーテーション`（""）`をつけないとエラーになるので注意が必要です。
+
+```tsx
+import { useState } from "react";
+
+//　中略
+
+const [dogImageUrl, setDogImageUrl] = useState("");
+```
+
+- 最後に、ボタンを押した時に状態変化する配列の変数`setDogImageUrl`に対して、取得した画像`dogImageUrl`を代入して呼び出すよう、`handleClick`関数に記述していきます。
+
+
+```tsx
+const handleClick = async () => {
+  const dogImage = await fetchDogImage();
+  setDogImageUrl(dogImage);
+};
+```
+
+
+***エラーが発生***
+
+- この実装をしているときにエラーが発生。
+- ボタンをクリックすると画像が出力されるはずがエラー表示がでてChromeから怒られてしまいました。
+
+```console
+VM406 index.tsx:16 Uncaught (in promise) 
+ReferenceError: fetchDogImage is not defined
+```
+- 理由は先に実装していた関数の記述場所が問題だったようです。
+- はじめはページコンポーネント関数`Home`の外側に記述していたのですが、それだとダメっぽいです。
+- 画像を取得する`fetchDogImage`と、クリック時の挙動を指示する`handleClick`。
+- それぞれの関数を、`Homeコンポーネントの中`に記述してあげることで、無事に画像取得ができました。
+- これまで、Chromeのコンソール上でしか、挙動を確認していなかったのが理由なのか、この実装をやるまで気付きませんでした。
+- 以下のようにコードの記述場所を修正してことなきを得ました。
+
+```tsx
+const Home: NextPage = () => {
+  const [dogImageUrl, setDogImageUrl] = useState("");
+
+  const fetchDogImage = async (): Promise<SeachDogImage> => {
+    const res = await fetch("https://dog.ceo/api/breed/shiba/images/random/1");
+    const result = await res.json();
+    return result.message[0];
+  };
+  
+  const handleClick = async () => {
+    const dogImage = await fetchDogImage();
+    // console.log(dogImage);
+    setDogImageUrl(dogImage);
+  };
+  
+  return (
+    <div className={styles.container}>
+      <h1>今日のHACHI</h1>
+      <img src={dogImageUrl} alt="shiba image" />
+      <button onClick={handleClick}>ワンワン !</button>
+    </div>
+  );
+};
+
+export default Home;
+```
+
+<img src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/3486945/8bf9fd3a-537b-77d5-a620-fa6e206d2f52.jpeg" alt="" width=50% height=50%>
+
+この状態から、ボタンを押すと、、、
+こうなります。
+
+<img src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/3486945/6d7d871c-d2e2-153c-b40e-58c0258f7b5c.jpeg" alt="" width=50% height=50%>
+
+- ひとまず、画像の出力まで成功しました。
+- ここでコミット・プルリクエストをしておきます。
+
+
+
+
+
+
+
 
 
 
