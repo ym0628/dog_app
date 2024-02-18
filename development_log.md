@@ -357,8 +357,269 @@ export default Home;
 
 
 
+### デプロイ先のVercelでエラーが発生
 
 
+```
+Type error: Argument of type 'SeachDogImage' is not assignable to 
+parameter of type 'SetStateAction<string>'.
+```
+
+```
+型エラー: 'SeachDogImage' 型の引数は、'SetStateAction<string>' 型の
+パラメータに割り当てることができません。
+```
+
+
+<img src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/3486945/5e4294d1-4cd4-faab-1d3d-3a3348b0ebba.jpeg" alt="" width=50% height=50%>
+
+
+この問題については別記事としてまとめました。
+
+https://qiita.com/ym0628/items/6b17d441d48716ccce02
+
+<br>
+
+## `SSR（サーバーサイドレンダリング）`を使い、サイトのロード時にもAPIを走らせ画像を出力する
+
+- ここまでに、ボタンクリックを発火タイミングとした画像取得・出力のイベントを実装することができました。
+- しかしながら現状、index.tsxページが読み込まれた段階では、ボタンをクリックしていないので、画像は出力されません。
+
+<img src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/3486945/4bbf3830-9e8a-4f0c-9a62-15405b144503.jpeg" alt="" width=50% height=50%>
+
+- ページアクセス時に固定の画像を置くこともできますが、今回はページロード・リロード時にもAPIが走るように実装していきます。
+- せっかくNext.jsフレームワークを使っているので、特長のひとつでもあるサーバーサイドレンダリング（SSR）機能を用いていきます。
+
+
+<br>
+
+順番としてはこんな感じで行っていきます。
+
+:::note warn
+- `SSR`で`getServerSideProps`関数を実装
+- `IndexPageProps`と命名した`interface`を実装
+- `Home関数コンポーネント`に`initialCatImageUrl`を指定し、リロード時にAPIが走るように実装
+:::
+
+
+<br>
+
+### `SSR`で`getServerSideProps`関数を実装
+
+
+- まずはNext.jsが提供するメソッド`getServerSideProps`を定義します。
+- 場所はHomeページコンポーネントの外側に記述します。今回は、最下部付近に実装しました。
+
+```tsx
+export const getServerSideProps: GetServerSideProps = async () => {};
+```
+
+- なお、`export`をつけないといけない理由はよく分かりません🙇
+- `GetServerSideProps`を記述すると、自動的に`import {  GetServerSideProps, NextPage } from "next";`が補完されます。
+- `GetServerSideProps`はこれだけで一種の型なのだそうです。
+
+
+https://www.commte.co.jp/learn-nextjs/getServerSideProps
+
+
+### `interface`で`GetServerSideProps`に渡すデータ型を指定する
+
+- 続いて先にもやった通り、SSRにも型付けを行っていきます。命名は`IndexPageProps`とします。
+- これもジェネリクスと言える、、、、のだと思います。
+- `GetServerSideProps`の後につづけて`<IndexPageProps>`と記述することで、ジェネリクスの型が引数みたいに渡され、`IndexPageProps`で定義したデータ型だけを受け付けるvalidationみたいなものが出来上がる、、、みたいなニュアンスで覚えておきます。🙇
+
+```tsx
+export const getServerSideProps: GetServerSideProps<
+  IndexPageProps
+> = async () => {
+ // ここに実行したいイベント処理を記述します。
+};
+```
+
+- そして定義したジェネリクス型にはこのように記述し、string型のみを受け取るように指定します。
+- データ型のキー命名は`initialDogImageUrl`としました。
+- 先に行った`interface SearchDogImage`と同じ要領です。
+
+```tsx
+interface IndexPageProps {
+  initialDogImageUrl: string;
+}
+```
+
+### `getServerSideProps`関数にイベント処理を記述する
+
+- ここまでできたら、土台が出来上がりみたいな感じです。
+- 定義した`getServerSideProps`に対して先と同じように画像を取得（フェッチ）してくる構文を記述します。
+- これは先に実装した`handleClick`に記述したやつをコピペでOK。
+
+```tsx
+export const getServerSideProps: GetServerSideProps<IndexPageProps> = async () => {
+  const dogImage = await fetchDogImage();
+```
+- ただし、上記で画像をフェッチしてきただけではブラウザには何も映りません。
+- return文を記述する必要があります。
+- 書き方には決まりがあり、`props: {};`と記述する必要があるそうです。
+- そして、`IndexPageProps`で定義した変数`initialDogImageUrl`をここで持ってきて、フェッチ画像`dogImage`を代入すればOKです。
+- 以下のようになりました。
+
+
+```tsx
+interface IndexPageProps {
+  initialDogImageUrl: string;
+}
+
+//中略
+// Run API even when page loads with SSR
+export const getServerSideProps: GetServerSideProps<IndexPageProps> = async () => {
+  const dogImage = await fetchDogImage();
+  return {
+    props: {
+      initialDogImageUrl: dogImage,
+    },
+  };
+};
+```
+
+- と、これで完成したかのように見えますが、これだとうまくいきません。
+
+<img src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/3486945/07282db6-7217-72ec-43b0-004d96f8c9fa.jpeg" alt="" width=50% height=50%>
+
+
+<br>
+
+### `Home関数コンポーネント`に`initialCatImageUrl`を指定し、リロード時にAPIが走るように実装
+
+- 今回は、サイトがレンダリングされたタイミングで、handleClickと同じように画像を出力したいので、SSRで`getServerSideProps`を定義し、それに対応した型`IndexPageProps`を定義し、最終的に`initialDogImageUrl`という変数に`dogImage`を代入しました。
+- これらを最後にどうするかというと、ページ出力元であるページコンポーネント関数`Home`にこれらの関数を渡してあげなければならないのです。
+- 修正前と修正後をコードを記載します。
+
+
+```tsx
+//修正前
+const Home: NextPage = () => {
+  const [dogImageUrl, setDogImageUrl] = useState("");
+  
+  //中略
+};
+```
+
+```tsx
+//修正後
+const Home: NextPage<IndexPageProps> = ( {initialDogImageUrl} ) => {
+  const [dogImageUrl, setDogImageUrl] = useState(initialDogImageUrl);
+  
+  //中略
+};
+```
+
+<br>
+
+### その他修正〜`fetchDogImage`関数をページコンポーネントの外側に配置〜
+
+- なぜか、上記実装では`fetchDogImage`が`getServerSideProps`で読み取ってくれませんでした。
+- 結論からいうと、`fetchDogImage`関数を、これまでページコンポーネント関数`Home`の内側に記述していたのですが、それが良くなかったようです。
+
+```diff_tsx
+interface IndexPageProps {
+  initialDogImageUrl: string;
+}
+
++ const fetchDogImage = async (): Promise<string> => {
++   const res = await fetch("https://dog.ceo/api/breed/shiba/images/random/1");
++   const result = await res.json();
++   return result.message[0];
++ };
+
+const Home: NextPage<IndexPageProps> = ( {initialDogImageUrl} ) => {
+  const [dogImageUrl, setDogImageUrl] = useState(initialDogImageUrl);
+```
+
+
+- ページコンポーネントの外側に配置を移したら、うまくSSRが実行され、サイトのアクセス・リロードの時にもAPIが走って画像が動的に出力されるようになりました。
+
+
+<img src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/3486945/d7696a47-6cc6-bb43-21ea-19797e957e44.jpeg" alt="" width=50% height=50%>
+
+- 以上で、Webアプリケーションの実装はおおむね完成しました。
+- ここまで実装したメインページ`~/pages/index.tsx`のソースコード全体を掲載します。
+
+```tsx
+// ~/pages/index.tsx
+
+import { Inter } from "next/font/google";
+import styles from "@/styles/Home.module.css";
+import {  GetServerSideProps, NextPage } from "next";
+import { useState } from "react";
+
+const inter = Inter({ subsets: ["latin"] });
+
+// interface SearchDogImage {
+//   message: string;
+//   status: string;
+// }
+
+interface IndexPageProps {
+  initialDogImageUrl: string;
+}
+
+const fetchDogImage = async (): Promise<string> => {
+  const res = await fetch("https://dog.ceo/api/breed/shiba/images/random/1");
+  const result = await res.json();
+  return result.message[0];
+};
+
+const Home: NextPage<IndexPageProps> = ( {initialDogImageUrl} ) => {
+  const [dogImageUrl, setDogImageUrl] = useState(initialDogImageUrl);
+
+  const handleClick = async () => {
+    const dogImage = await fetchDogImage();
+    setDogImageUrl(dogImage);
+  };
+  
+  return (
+    <div className={styles.container}>
+      <h1>今日のHACHI</h1>
+      <img src={dogImageUrl} alt="shiba image" />
+      <button onClick={handleClick}>ワンワン !</button>
+    </div>
+  );
+};
+
+// Run API even when page loads with SSR
+export const getServerSideProps: GetServerSideProps<IndexPageProps> = async () => {
+  const dogImage = await fetchDogImage();
+  return {
+    props: {
+      initialDogImageUrl: dogImage,
+    },
+  };
+};
+
+export default Home;
+```
+
+- 以上で柴犬の画像を出力する個人開発Webアプリ開発の本編は終了となります。
+
+<br>
+
+## リファクタリングとスタイリング
+
+- 続いては、これまで学んだ技術の中から、やってみたいことにチャレンジしていきます。
+- 具体的には、`リファクタリング`と、`CSS`による`スタイリング`です。
+- Reactの自己学習で学んだ`コンポーネント化による保守性の維持`、`useCallback`などのパフォーマンス向上の機能が使えるかなど。そしてスタイルにおいては、`CSS module`を用いて、もう少し凝った見た目にチャレンジしていきます。
+
+
+<br><br>
+
+## `useCallback`を使って余計な際レンダリングを防止してパフォーマンスを向上させたい
+
+- コンポーネント外の場所にイベントを処理を書く場合、引数に渡す変数が多くなりがち。
+- よって、コンポーネントの内側（return文の直上）にイベント処理のコードを書きたいのですが、、、。
+- それだと、ページが再レンダリングされた時、メソッドも再生成されてしまい、パフォーマンスが比較的悪くなるというデメリットがある。
+- それを回避したい場合は、`useCallBack`という`Reactがサポートする機能`を使ってあげる事で、再レンダリング時の無駄なメソッド再生成を防ぐ事が出来る。
+- `React`学習をこれまでやってきたなかで`useCallback`について学んできたので、実際に個人開発で使ってみたいと思いました。
+- しかし、今回作成している画像をAPIで取得するというWebアプリケーションにおいては、その使い所があるのかは、イマイチ分からないです。
+- これは自身のネットワークに対する基礎知識が不足するところであり、恥ずかしい限りだが、いろいろ調べたり、試したりしてみたいと思います。
 
 
 
