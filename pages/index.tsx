@@ -1,7 +1,7 @@
 import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
 import {  GetServerSideProps, NextPage } from "next";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,19 +23,21 @@ const fetchDogImage = async (): Promise<string> => {
 const Home: NextPage<IndexPageProps> = ( {initialDogImageUrl} ) => {
   const [dogImageUrl, setDogImageUrl] = useState(initialDogImageUrl);
 
-  // const handleClick = async () => {
-  //   const dogImage = await fetchDogImage();
-  //   setDogImageUrl(dogImage);
-  // };
-
   const handleClick = useCallback( async () => {
     const dogImage = await fetchDogImage();
     setDogImageUrl(dogImage);
   }, []);
 
+  useEffect(() => {
+    document.body.style.backgroundColor = "beige";
+    return () => {
+      document.body.style.backgroundColor = "";
+    }
+  }, []);
+
   return (
     <div className={styles.container}>
-      <h1>今日のHACHI</h1>
+      <h1>今日のSHIBA</h1>
       <img src={dogImageUrl} alt="shiba image" />
       <button onClick={handleClick}>ワンワン !</button>
     </div>
