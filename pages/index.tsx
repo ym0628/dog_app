@@ -1,5 +1,6 @@
 import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
+import { Header } from "@/components/Header";
 import {  GetServerSideProps, NextPage } from "next";
 import { useCallback, useEffect, useState } from "react";
 
@@ -37,6 +38,7 @@ const Home: NextPage<IndexPageProps> = ( {initialDogImageUrl} ) => {
 
   return (
     <div className={styles.container}>
+      <Header />
       <h1>今日のSHIBA</h1>
       <img src={dogImageUrl} alt="shiba image" />
       <button onClick={handleClick}>ワンワン !</button>

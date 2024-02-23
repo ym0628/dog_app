@@ -1,0 +1,20 @@
+.header {
+  border-bottom: 1px, sienna;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+
+.header a {
+  display: inline-block;
+  color: brown;
+  padding: 5px 12px;
+  text-decoration: none;
+  transition: background-color .50s;
+}
+
+.header > a:hover {
+  background-color: lightblue;
+}
