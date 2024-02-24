@@ -707,6 +707,146 @@ import { useCallback, useState } from "react";
 - 一旦、上記コードで先に進めることにします。
 
 
+<br>
+
+### 追加機能を実装
+
+- 柴犬画像のAPIだけでなく、秋田犬の画像取得するページ`~/pages/akita.tsx`を作成してみます。
+- `useEffect`を用いて柴犬ページと秋田犬ページとで、背景色を変えます。
+- それぞれのページに遷移するリンクを設置します。
+- 画面遷移として、トップページindex.tsxをSHIBAの画像出力ページではなく、サイトトップとしての役割に置き換えます。
+- index.tsx => トップページとして、SHIBAページとAKITAページへのリンクを置く
+- 追加の遷移先としてshiba.tsxとakita.tsxファイルを作成
+- 上記のようにした後に、リファクタリングとして各種コンポーネントやHooksに切り出します。
+
+<br>
+
+***useEffectで背景色をベージュに変更その他***
+
+- `indexページにuseEffectで背景色を定義`
+- `h1タグのタイトルを「SHIBA」に変更`
+- `コメントアウトしていたhandleClick 関数を削除`
+
+
+
+いったん、この内容でコミットしておきます。
+
+<br>
+
+***Headerコンポーネントを作成しリンクを設置***
+
+- Headerと命名するコンポーネントを作成します。中身は各ページへのリンク群です。
+- indexページに秋田犬ページへのリンクボタンを設置
+
+
+:::note warn
+LinkコンポーネントはNext.jsの機能であり、Reactではないので注意。
+:::
+
+参考になった動画はコチラ
+
+https://www.youtube.com/watch?v=qrF3AbAx_9c&list=PLwM1-TnN_NN6fUhOoZyU4iZiwhLyISopO&index=6
+
+**<font color="Orange">動画07分14秒から</font>**
+
+- まずはヘッダーリンクを作成していきます。
+- CSSスタイリングでかなり苦戦したが、何とか意図するものはできました。
+- 以下がコミットしたコード。
+
+```tsx
+// Header.tsx
+
+import Link from "next/link";
+import styles from "@/components/Header.module.css";
+
+const Header = () => {
+  return (
+    <header className={styles.header}>
+      <Link href="/">SHIBA</Link>
+      <Link href="/akita">AKITA</Link>
+    </header>
+  );
+}
+
+export { Header }
+```
+
+:::note alert
+ここでめちゃめちゃ躓きました💧
+- `const Header = () => {}`のように、アロー関数で表現する時は、関数の外、最終行あたりに`export`文を入れないとエラーになるので注意。
+- `Link`コンポーネントは`import Link from "next/link";`としないと使えないので注意。
+:::
+
+
+
+```css
+/* components/Header.module.css */
+
+.header {
+  border-bottom: 1px, sienna;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+
+.header a {
+  display: inline-block;
+  color: brown;
+  padding: 5px 12px;
+  text-decoration: none;
+  transition: background-color .50s;
+}
+
+.header > a:hover {
+  background-color: lightblue;
+}
+```
+
+:::note alert
+- `border-bottom: 1px, sienna;`の箇所はたぶん設置場所を間違えている気がするので、後で直します。
+- 今回は.headerクラスを命名したのですが、一口にheaderクラスといっても、その中の子要素としてaタグが使われていたりします。
+- 親である`.header`に対して`:hover`を適用させようとしても、行全体、すなわち`.header`クラスの全体に対してhoverが当たってしまい、変な感じになってしまいました。
+- 上記のように、classの親子関係を理解しておかないと、スタイルが当たらなくて沼にハマってしまうので肝に銘じておきます。
+:::
+
+
+```tsx
+import { Header } from "@/components/Header";
+
+// 中略
+
+  return (
+    <div className={styles.container}>
+      <Header />
+      <h1>今日のSHIBA</h1>
+      <img src={dogImageUrl} alt="shiba image" />
+      <button onClick={handleClick}>ワンワン !</button>
+    </div>
+
+// 中略
+```
+
+:::note alert
+`<Header />`の配置場所によってスタイルが当たらないことがあるので注意
+:::
+
+
+<br>
+
+***pages/akita.tsxファイルを作成***
+
+続いて、新たに秋田犬のページを作成します。主に以下のような事を実施します。
+
+- indexページをコピペしてakita.tsxファイルを作成
+- 秋田犬ページ用に、コードを修正
+
+
+
+
+
+
 
 
 
