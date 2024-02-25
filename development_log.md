@@ -924,6 +924,11 @@ https://www.youtube.com/watch?v=OTF2auzlBV0&list=PLwM1-TnN_NN6fUhOoZyU4iZiwhLyIS
 
 - カスタムフックを使って関数群をまとめたりする技術がわかりやすく解説されています。
 - またコンポーネントにするか、カスタムフックにするかの使い所の違いについても解説されています。
+- Hooksにはルールがあります。
+    - 必ずページコンポーネント関数のreturn文の前（トップレベル）で呼び出してください。
+    - React関数以外では呼び出さないでください。（素のJavaScriptの関数で呼び出してはいけない）
+    - 関数の命名は必ず`use`から始めなければなりません。
+    - 逆に、JavaScriptで`use`と使ってしまうと、Reactなのか区別がつきにくくなってしまうので、JavaScript関数の命名では`use`は使ってはいけません。
 
 <img src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/3486945/cf7febba-9434-7f05-0f18-41d4c6bcb387.png" alt="" width=50% height=50%>
 
@@ -964,7 +969,46 @@ export default Shiba;
  <Link href="/shiba">SHIBA</Link>
 ```
 
+<br>
 
+### `Googleフォント`が読み込まれていないので修正する
+
+- `Googleフォント`が読み込まれていないので修正します。
+- 参考になった公式ドキュメントや外部サイト記事をここに掲載しておきます。
+
+https://nextjs.org/docs/pages/building-your-application/optimizing/fonts#apply-the-font-in-head
+
+https://zenn.dev/hayato94087/articles/f6557abbd6d079
+
+https://fonts.google.com/variablefonts#font-families
+
+https://chuckwebtips.hatenablog.com/entry/2022/11/09/193441
+
+
+- 全てのページにフォントを適用させたいので、親である`pages/_app.tsx`にgoogleフォントを読み込む定義を実装します。
+- ポイントとしては、_app.tsxに定義すること
+- 可変フォントというのが推奨されているということ。
+- 公式ドキュメントの通りに実装しておけばとりあえずOK。
+
+```tsx
+// pages/_app.tsx
+
+import "@/styles/globals.css";
+import type { AppProps } from "next/app";
+import { Inter } from 'next/font/google'
+ 
+const inter = Inter({ subsets: ['latin'] })
+ 
+export default function App({ Component, pageProps }: AppProps) {
+  return (
+    <main className={inter.className}>
+      <Component {...pageProps} />
+    </main>
+  )
+}
+```
+
+<br>
 
 
 
