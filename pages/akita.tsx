@@ -4,8 +4,6 @@ import { Header } from "@/components/Header";
 import {  GetServerSideProps, NextPage } from "next";
 import { useCallback, useEffect, useState } from "react";
 
-const inter = Inter({ subsets: ["latin"] });
-
 // interface SearchDogImage {
 //   message: string;
 //   status: string;
