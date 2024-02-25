@@ -1008,10 +1008,67 @@ export default function App({ Component, pageProps }: AppProps) {
 }
 ```
 
+***追記***
+
+- SPAの場合に、各tsxファイルでGoogleフォントを呼び出す文は、おそらく不要です。
+- `_app.tsx`で全ページに適用するように指定しているため。
+- そのため、`shiba.tsx`と`akita.tsx`にて定義していた`const inter`文を削除しました。
+
+
+
 <img src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/3486945/e61b21d6-5412-3943-63ab-84372c013e16.jpeg" alt="" width=50% height=50%>
 
 
 <br><br>
+
+### 新たに`index.tsx`ページを用意する
+
+- 以前のindexページはshiba.tsxに変更してルーティングも別に用意したため、ルートページが無い状態です。
+- なので改めてindexページを作ります。
+- 何かいい感じのデザインを当てたいのですが、それはまた後でやるとして。
+- ひとまずは箱だけ用意する感じにします。
+- `$ touch index.tsx`
+- `$ touch Home.module.css`
+- フリー素材のイラストをDLして、`public`ディレクトリ配下に保存します。
+- ひとまずこんな感じで実装できました。
+
+
+```tsx
+import styles from "@/styles/Home.module.css";
+import { Header } from "@/components/Header";
+import Image from "next/image"
+
+const Home = () => {
+  return (
+    <div className={styles.container}>
+      <Header />
+      <h1>今日のDOG</h1>
+      <Image
+        src="/dog.png"
+        alt="dog image"
+        width={300}
+        height={300}
+        priority
+      />
+    </div>
+  );
+};
+
+export default Home;
+```
+
+<img src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/3486945/438a83e3-d20d-cf28-f572-22c56231cdc8.jpeg" alt="" width=50% height=50%>
+
+
+- これもたぶん、コンポーネント化してそこから呼び出すみたいな感じにするのが良さそうです。
+- 後でやるとして、ひとまずはこれだけにしておきます。
+- 素の`img`プロパティを使うより、`next/image`を使用する事が推奨となっているようです。
+- こちらも`Next.js公式ドキュメント`に実装の仕方が解説されていました。
+
+https://nextjs-ja-translation-docs.vercel.app/docs/basic-features/image-optimization#local-images
+
+
+<br>
 
 
 
