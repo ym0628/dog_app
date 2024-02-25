@@ -930,6 +930,42 @@ https://www.youtube.com/watch?v=OTF2auzlBV0&list=PLwM1-TnN_NN6fUhOoZyU4iZiwhLyIS
 <br><br>
 
 
+## リファクタリングを開始
+
+上記でまとめたリファクタリング内容を元に、実装を開始していきます。
+
+<br>
+
+### `indexページ`を`shibaページ`に変更
+
+TOPページを別に作りたいので、現在のindexページをshibaページとし、それに応じたルーティングやリンク遷移先を変更していきます。
+
+- `index.tsx` => `shiba.tsx`
+- `Home.module.css` => `Shiba.module.css`
+
+
+```tsx
+// shiba.tsx
+
+import styles from "@/styles/Shiba.module.css";
+
+// 中略
+
+const Shiba: NextPage<IndexPageProps> =
+
+// 中略
+
+export default Shiba;
+```
+
+```tsx
+// Header.tsx
+
+ <Link href="/shiba">SHIBA</Link>
+```
+
+
+
 
 
 

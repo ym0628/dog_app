@@ -1,5 +1,5 @@
 import { Inter } from "next/font/google";
-import styles from "@/styles/Home.module.css";
+import styles from "@/styles/Shiba.module.css";
 import { Header } from "@/components/Header";
 import {  GetServerSideProps, NextPage } from "next";
 import { useCallback, useEffect, useState } from "react";
@@ -21,7 +21,7 @@ const fetchDogImage = async (): Promise<string> => {
   return result.message[0];
 };
 
-const Home: NextPage<IndexPageProps> = ( {initialDogImageUrl} ) => {
+const Shiba: NextPage<IndexPageProps> = ( {initialDogImageUrl} ) => {
   const [dogImageUrl, setDogImageUrl] = useState(initialDogImageUrl);
 
   const handleClick = useCallback( async () => {
@@ -56,4 +56,4 @@ export const getServerSideProps: GetServerSideProps<IndexPageProps> = async () =
   };
 };
 
-export default Home;
+export default Shiba;
