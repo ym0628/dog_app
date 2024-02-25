@@ -874,6 +874,61 @@ import { Header } from "@/components/Header";
 - いや、ちょっと面倒なので、`hover`の色を変えちゃいます。
 - ここは別途コミットしておきました。
 
+<br>
+
+## 次にやることを考察
+
+次にやりたいこと。やるべき事を考察します。
+
+:::note warn
+* `Googleフォント`が読み込まれていないので修正する
+* `index.tsx`を`shiba.tsx`に変更する。
+* `Home.module.css`を`Shiba.module.css`に変更する
+* 別途`index.tsx`ページを用意する。
+* 新たに作成した`index.tsx`ページにちょっとしたいい感じのデザインを実装する。
+* Headerのナビゲーションリンクを分割配列？分割代入？して、mapメソッドで回す。
+* `HeadLine.tsx`コンポーネントを作成し、見出し「今日のSHIBA」と「今日のAKITA」を出し分ける。
+* カスタムフックを使って`BgColor`の出し分けるロジックをコンポーネント化する。
+* カスタムフックを使って`SHIBAページ`と`AKITAページ`両方で使っているロジック群をまとめる。
+:::
+
+
+### リファクタリングでの参考になる講座
+
+https://www.youtube.com/watch?v=tcQCSwL7eGI&list=PLwM1-TnN_NN6fUhOoZyU4iZiwhLyISopO&index=18&t=490s
+
+**<font color="Orange">動画17分49秒から 👆 </font>**
+
+- リファクタリング後の完成形が確認できます。
+- 綺麗なコード設計が確認できてとても参考になりました。
+
+<br>
+
+<img src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/3486945/20a0fe90-6971-8bf3-3c09-93fbbc903070.png" alt="" width=50% height=50%>
+
+
+<br><br>
+
+https://www.youtube.com/watch?v=Ai9rMk5QbOo&list=PLwM1-TnN_NN6fUhOoZyU4iZiwhLyISopO&index=4
+
+**<font color="Orange">動画07分09秒から 👆 </font>**
+
+- ページのHeadlineタイトル（見出し）を動的に出し分けるためのコンポーネント化
+- そしてpropsの技術がわかりやすく解説されています。
+
+<br>
+
+https://www.youtube.com/watch?v=OTF2auzlBV0&list=PLwM1-TnN_NN6fUhOoZyU4iZiwhLyISopO&index=15
+
+**<font color="Orange">動画10分05秒から 👆 </font>**
+
+- カスタムフックを使って関数群をまとめたりする技術がわかりやすく解説されています。
+- またコンポーネントにするか、カスタムフックにするかの使い所の違いについても解説されています。
+
+<img src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/3486945/cf7febba-9434-7f05-0f18-41d4c6bcb387.png" alt="" width=50% height=50%>
+
+<br><br>
+
 
 
 
