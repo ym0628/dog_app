@@ -1,13 +1,7 @@
-import { Inter } from "next/font/google";
 import styles from "@/styles/Shiba.module.css";
 import { Header } from "@/components/Header";
 import {  GetServerSideProps, NextPage } from "next";
 import { useCallback, useEffect, useState } from "react";
-
-// interface SearchDogImage {
-//   message: string;
-//   status: string;
-// }
 
 interface IndexPageProps {
   initialDogImageUrl: string;
