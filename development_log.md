@@ -1114,6 +1114,16 @@ https://nextjs-ja-translation-docs.vercel.app/docs/basic-features/image-optimiza
 
 <br>
 
+### Headerコンポーネントのリファクタリング
+
+以下、ディレクトリのまとめ、およびコードン軽微な加筆・修正を行いました。
+
+- `Header`ディレクトリを作成し、配下にHeader関連2ファイルを移行
+- `Header.tsx`を`index.tsx`に命名を変更
+- ヘッダーのリンク先に`HOME`を追加
+- `Header`リファクタリングの記録をmdファイルに追記
+
+<br>
 
 
 
