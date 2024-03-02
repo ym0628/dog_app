@@ -1,5 +1,6 @@
 import styles from "@/styles/Shiba.module.css";
 import { Header } from "@/components/Header";
+import { Headline } from "@/components/Headline";
 import {  GetServerSideProps, NextPage } from "next";
 import { useCallback, useEffect, useState } from "react";
 
@@ -31,7 +32,7 @@ const Shiba: NextPage<IndexPageProps> = ( {initialDogImageUrl} ) => {
   return (
     <div className={styles.container}>
       <Header />
-      <h1>今日のSHIBA</h1>
+      <Headline title="今日のSHIBA" />
       <img src={dogImageUrl} alt="shiba image" />
       <button onClick={handleClick}>ワンワン !</button>
     </div>
