@@ -1,12 +1,13 @@
 import styles from "@/styles/Home.module.css";
 import { Header } from "@/components/Header";
+import { Headline } from "@/components/Headline";
 import Image from "next/image"
 
 const Home = () => {
   return (
     <div className={styles.container}>
       <Header />
-      <h1>今日のDOG</h1>
+      <Headline title="今日のDOG" />
       <Image
         src="/dog.png"
         alt="dog image"
