@@ -7,10 +7,21 @@
 }
 
 .container img {
-  width: 350px;
+  width: 325px;
   height: auto;
 }
 
 .container button {
   margin-top: 20px;
+  font-size: 1.2rem;
+  color: #333;
+  font-weight: bold;
+  background-color: lightsalmon;
+  border-radius: 5px;
+  box-shadow: 5px 5px 0 #bbb;
+  transition: box-shadow .50s;
+}
+
+.container button:hover {
+  box-shadow: 0 0 0
 }
