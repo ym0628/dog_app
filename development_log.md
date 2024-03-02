@@ -1258,8 +1258,60 @@ https://teratail.com/questions/224820
 <br>
 
 
+### 画像出力ボタンのスタイルをまともにする
+
+- 現状、ボタンをスタイルがダサいので、まともな感じにしたいです。
+- 追加でCSS moduleでボタンに装飾を施します。
+
+```css
+/* Shiba.module.css */
+/* Akita.module.css */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.container img {
+  width: 325px;
+  height: auto;
+}
+
+.container button {
+  margin-top: 20px;
+  font-size: 1.2rem;
+  color: #333;
+  font-weight: bold;
+  background-color: lightsalmon;
+  border-radius: 5px;
+  box-shadow: 5px 5px 0 #bbb;
+  transition: box-shadow .50s;
+}
+
+.container button:hover {
+  box-shadow: 0 0 0
+}
+```
+
+<img src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/3486945/bedfb90e-5eae-4bf1-2cd9-b6d49b8d9ebf.jpeg" alt="" width=50% height=50%>
 
 
+<br>
+
+
+### buttonプロパティをコンポーネント化
+
+
+### imgプロパティからImageコンポーネントに変更
+
+
+### HOMEページ遷移のタイミングにローディングデザインを実装（JavaScript）
+
+
+### 各ロジックをカスタムフックにまとめるリファクタリングを開始
 
 
 
