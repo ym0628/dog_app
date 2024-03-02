@@ -1123,7 +1123,144 @@ https://nextjs-ja-translation-docs.vercel.app/docs/basic-features/image-optimiza
 - ヘッダーのリンク先に`HOME`を追加
 - `Header`リファクタリングの記録をmdファイルに追記
 
+
 <br>
+
+### 見出しを`Headline`と名付けてコンポーネント化
+
+componentsディレクトリ配下は、こんな感じの構造にしようと思います。
+
+```terminal
+- components
+    - Headline
+        - Headline.module.css
+        - index.tsx
+```
+
+
+
+props引数に入れて、出し分け出来るようにしようと思います。
+
+
+```typescript
+// components/Headline/index.tsx
+
+import styles from "@/components/Headline/Headline.module.css";
+
+const Headline = (props) => {
+  console.log(props);
+  return (
+    <div>
+      <h1 className={styles.title}>
+        {props.title}
+      </h1>
+    </div>
+  );
+}
+
+export { Headline }
+```
+
+:::note alert
+上記では、このようなエラーが出ました。
+
+`Parameter 'props' implicitly has an 'any' type. TS7006`
+
+Reactの構文を.tsxファイル、すなわち TypeScriptで書こうとしていることに起因していると思われる？ようです。
+
+`props`に対して型を指定してあげることでエラーを解消させることができました。
+
+以下のように修正しました。👇👇
+:::
+
+
+```tsx
+import styles from "@/components/Headline/Headline.module.css";
+
+type Props = {
+  title: string
+}
+
+const Headline = (props: Props) => {
+  return (
+    <div>
+      <h1 className={styles.title}>
+        {props.title}
+      </h1>
+    </div>
+  );
+}
+
+export { Headline }
+```
+
+***参考サイト***
+
+https://teratail.com/questions/224820
+
+
+<br>
+
+コンポーネントを親で呼び出す時はこんな感じで良いと思います。
+
+```tsx
+// index.tsx
+<Headline title="今日のDOG" />
+
+// shiba.tsx
+<Headline title="今日のSHIBA" />
+
+// akita.tsx
+<Headline title="今日のAKITA" />
+```
+
+<br>
+
+
+### Headline周りの`CSS Module`を修正
+
+- HeadlineのCSSがうまく聞いていなかったので修正
+- また、Headlineに共通化したCSSスタイルの記述`.container h1 {}`を、Home.module.cssなどの親CSSファイルから削除しました。
+
+```diff_css
+/* Headline.module.cssを修正 */
+
+- .title h1 {
++ .title {
+   margin-bottom: 15px;
+ }
+```
+
+```diff_css
+/* Home.module.cssからh1のスタイルを削除 */
+/* Shiba.module.cssからh1のスタイルを削除 */
+/* Akita.module.cssからh1のスタイルを削除 */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+-  .container h1 {
+-    margin-bottom: 15px;
+-   }
+
+.container button {
+  margin-top: 20px;
+}
+```
+
+- これでHeadlineコンポーネントのスタイリング共通化がうまくできたと思います。
+
+<br>
+
+
+
+
+
 
 
 
