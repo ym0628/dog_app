@@ -3,7 +3,8 @@ import { Header } from "@/components/Header";
 import { Headline } from "@/components/Headline";
 import Image from "next/image"
 import {  GetServerSideProps, NextPage } from "next";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
+import { useBgLightblue } from "@/hooks/useBgLightblue";
 
 interface IndexPageProps {
   initialDogImageUrl: string;
@@ -17,17 +18,11 @@ const fetchDogImage = async (): Promise<string> => {
 
 const Akita: NextPage<IndexPageProps> = ( {initialDogImageUrl} ) => {
   const [dogImageUrl, setDogImageUrl] = useState(initialDogImageUrl);
+  useBgLightblue();
 
   const handleClick = useCallback( async () => {
     const dogImage = await fetchDogImage();
     setDogImageUrl(dogImage);
-  }, []);
-
-  useEffect(() => {
-    document.body.style.backgroundColor = "lightblue";
-    return () => {
-      document.body.style.backgroundColor = "";
-    }
   }, []);
 
   return (

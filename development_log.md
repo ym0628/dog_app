@@ -1400,14 +1400,85 @@ export default nextConfig;
 - とりあえず、Imageコンポーネントの実装はひとまずこれで完成とします。
 - リファクタリングが必要かはまた後で考えます。
 
+***参考サイト***
+
+https://reffect.co.jp/nextjs/nextjs-image#Image-2
+
 <br>
 
 
+### 各ロジックをカスタムフックにまとめるリファクタリングを開始
+
+- まずはHomeディレクトリに`hooks`ディレクトリを作成
+- その配下にカスタムフックのファイルを作っていきます。
+- 背景色を変えるロジックを`useBgBeige`や`useBgLightblue`というカスタムフックにまとめました。
+
+<br>
+
+```tsx
+// ~/hooks/useBgBeige.tsx
+
+import { useEffect } from "react";
+
+export const useBgBeige = () => {
+  useEffect(() => {
+    document.body.style.backgroundColor = "beige";
+    return () => {
+      document.body.style.backgroundColor = "";
+    }
+  }, []);
+};
+```
+
+```tsx
+// ~/hooks/useBgLightblue.tsx
+
+import { useEffect } from "react";
+
+export const useBgBeige = () => {
+  useEffect(() => {
+    document.body.style.backgroundColor = "beige";
+    return () => {
+      document.body.style.backgroundColor = "";
+    }
+  }, []);
+};
+```
+
+- これに伴ない、親コンポーネントにて、importします。
+
+```tsx
+// ~/hooks/useBgBeige.tsx
+
+import { useBgBeige } from "@/hooks/useBgLightblue";
+
+useBgBeige();
+
+
+
+// ~/hooks/useBgLightblue.tsx
+import { useBgLightblue } from "@/hooks/useBgLightblue";
+
+
+useBgLightblue();
+```
+
+***その他のカスタムフック化は断念***
+
+- その他、肝心な画像出力に関するロジックをカスタムフックとしてまとめようとしましたが、うまくいかず。
+- 結果的に今回は断念し、見送ることにします。
+- 良くわからないが、親コンポーネントの外側、内側にあるロジックをまとめるのはダメ？
+- 良くわからないが、SSRはカスタムフックにまとめることはできない、、、かも？？？
+
+あまり時間をかけてもいられないので、今回は深追いせず、カスタムフック化のリファクタリングは、ここで終わりとします。
+
+
+<br>
 
 ### HOMEページ遷移のタイミングにローディングデザインを実装（JavaScript）
 
 
-### 各ロジックをカスタムフックにまとめるリファクタリングを開始
+
 
 
 
