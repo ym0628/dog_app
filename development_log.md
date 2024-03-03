@@ -1304,8 +1304,104 @@ https://teratail.com/questions/224820
 
 ### buttonプロパティをコンポーネント化
 
+- `onClick`によるイベント関数が入っているbuttonプロパティをコンポーネント化する時は、一筋縄ではいかないようです。
+
+<img src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/3486945/f3089d86-1b84-3b93-8ef3-0747a161f2c8.jpeg" alt="" width=50% height=50%>
+
+- いったん、このボタンのコンポーネント化は保留とします。
+
+
 
 ### imgプロパティからImageコンポーネントに変更
+
+- 現状、`img`プロパティを使用していますが、これだとNext.js的には推奨していないようです。
+- `<Image />`という感じで、`next/image`を使用したいと思います。
+- ですが、このイメージ画像はAPIで取得する動的な画像で、関数が定義されています。
+- 動的に変わる画像に対して、`next/image`は使えるのでしょうか？
+- とりあえず試してみます。
+
+<br>
+
+- 普通に実装すると怒られてしまいました,,,,
+
+```terminal
+Unhandled Runtime Error
+
+Error: Invalid src prop (https://images.dog.ceo/breeds/shiba/mamehiko03.jpg) on `next/image`,
+hostname "images.dog.ceo" is not configured under images in your `next.config.js`
+
+See more info: https://nextjs.org/docs/messages/next-image-unconfigured-host
+```
+
+```terminal
+未処理のランタイムエラー
+
+エラー: `next/image` の無効な src prop (https://images.dog.ceo/breeds/shiba/mamehiko03.jpg)、
+ホスト名「images.dog.ceo」が `next.config のイメージの下に設定されていません .js`
+詳細については、https://nextjs.org/docs/messages/next-image-unconfigured-host を
+参照してください。
+```
+
+- こちらの公式ドキュメントがヒントになりそうです。
+
+https://nextjs.org/docs/messages/next-image-unconfigured-host
+
+`このエラーが発生した理由`
+`コンポーネントを利用するページの 1 つがnext/image、srcURL 内で定義されていないホスト名を使用する値をimages.remotePatterns渡しましたnext.config.js。`
+
+<br>
+
+- `next.config.js`に、ホストするサイト（ここではDogApi）の情報を追記してあげると良いっぽい？と思われるのでやってみます。
+
+
+```js
+// next.config.mjs
+// Next.js version 14.1.0
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.dog.ceo',
+        port: '',
+        pathname: '/breeds/**',
+      },
+    ],
+  },
+};
+
+export default nextConfig;
+```
+
+```tsx
+// shiba.tsx
+// akita.tsx
+
+  return (
+    <div className={styles.container}>
+      <Image
+        src={dogImageUrl}
+        alt="shiba image"
+        width={300}
+        height={300}
+        priority
+      />
+    </div>
+  );
+```
+
+- いろいろ試行錯誤しましたが、上記コードに修正したら出来ました。
+- Imageコンポーネントでは、widthとheightを指定しないとエラーになってしまうので指定しましたが、
+- 画面に出力される段階では、CSS modulesのスタイルに定義した幅が適用されていましたね。
+- とりあえず、Imageコンポーネントの実装はひとまずこれで完成とします。
+- リファクタリングが必要かはまた後で考えます。
+
+<br>
+
 
 
 ### HOMEページ遷移のタイミングにローディングデザインを実装（JavaScript）
