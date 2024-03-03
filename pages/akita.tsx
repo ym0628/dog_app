@@ -1,6 +1,7 @@
 import styles from "@/styles/Akita.module.css";
 import { Header } from "@/components/Header";
 import { Headline } from "@/components/Headline";
+import Image from "next/image"
 import {  GetServerSideProps, NextPage } from "next";
 import { useCallback, useEffect, useState } from "react";
 
@@ -33,7 +34,13 @@ const Akita: NextPage<IndexPageProps> = ( {initialDogImageUrl} ) => {
     <div className={styles.container}>
       <Header />
       <Headline title="今日のAKITA" />
-      <img src={dogImageUrl} alt="shiba image" />
+      <Image
+        src={dogImageUrl}
+        alt="akita image"
+        width={300}
+        height={300}
+        priority
+      />
       <button onClick={handleClick}>ワンワン !</button>
     </div>
   );
