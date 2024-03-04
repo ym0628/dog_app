@@ -1,40 +1,102 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# dog_app
 
-## Getting Started
+***アプリケーションURL***
 
-First, run the development server:
+<a href="https://dog-app-swart.vercel.app/" target="_blank">https://dog-app-swart.vercel.app/</a>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+<br>
+
+<div style="text-align: center;">
+    <img src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/3486945/80ca8022-5997-41b7-3ce1-abaefaa7c495.png" alt="" width=50% height=50%>
+</div>
+
+
+<br>
+
+## 主な機能
+
+柴犬と秋田犬、2種類の犬種にフォーカスした画像をランダムで取得しWebブラウザに出力するというシンプルな機能です。
+
+犬の画像をランダムで取得するサービス「Dog API」のAPI機能を使い、その中から柴犬と秋田犬に絞った画像をランダムで出力する機能を実装しました。
+
+| <img src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/3486945/16fc0164-5fad-7a28-69c9-28918d4aea8a.png"> | <img src="https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/3486945/c9656e3d-c6be-1558-e0a0-8b25cbfd9fb8.png">               |
+| -------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| **柴犬画像出力**<br>ページ`/shiba`にてボタンを押すと、柴犬の画像のみをランダムで取得し、ブラウザ出力してくれます。<br>   | **秋田犬画像出力**<br>ページ`/akita`では、秋田犬のみの画像をランダムで出力してくれます。 |
+
+<br>
+
+全部で画面遷移するページはHOME、SHIBA、AKITAの3ページとなっております。
+
+
+<br>
+
+## 本アプリケーションの環境構築と導入手順
+
+***本アプリケーションのリポジトリをGitHubからフォークします。***
+
+
+***フォークした本アプリのリポジトリをローカルの任意のディレクトリ配下にgit cloneします。***
+
+```terminal
+$ git clone git@github.com:[YOUR_USER_NAME]/dog_app.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+*** npm run build します ***
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## 開発でこだわったところ
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+開発でこだわったポイントについて。
 
-## Learn More
+### TypeScriptで型安全性の実現
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### SSRによる読み込みの速さを追求
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+### コンポーネント・カスタムフックによるリファクタリング
+
+
+
+
+## 使用した技術・言語
+
+***インフラ・本番環境***
+- Vercel
+
+***フレームワーク***
+- Next.js
+
+***使用言語***
+- TypeScript
+- React
+- JavaScript
+- HTML
+- CSS
+
+***ライブラリ・API***
+- Dog API
+https://dog.ceo/dog-api/
+
+## 開発者プロフィール
+2022年から本格的にプログラミング学習中。プログラミングスクールRUNTEQ37期生。
+Ruby on Railsを中心に学習を始め、現在はReact/TypeScript/Next.jsを使ったフロントエンド開発の技術をメインで学んでいます。
+
+***GitHub***
+
+<a href="https://github.com/ym0628" target="_blank">https://github.com/ym0628</a>
+
+***X（Twitter）***
+
+<a href="https://x.com/yuta_matsuzaka" target="_blank">https://x.com/yuta_matsuzaka</a>
+
+## メモ
+
+`{: align="center"} <img src="" alt="" width=50% height=50%>`
+
+`<img src="" alt="" width=50% height=50%>`
