@@ -2,7 +2,7 @@ import styles from "@/styles/Shiba.module.css";
 import { Header } from "@/components/Header";
 import { Headline } from "@/components/Headline";
 import Image from "next/image"
-import {  GetServerSideProps, NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import { useCallback, useState } from "react";
 import { useBgBeige } from "@/hooks/useBgBeige";
 
