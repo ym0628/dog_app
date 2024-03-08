@@ -1477,7 +1477,7 @@ useBgLightblue();
 
 ### HOMEページ遷移のタイミングにローディングデザインを実装（JavaScript）
 
-
+検討中...
 
 
 
