@@ -1525,18 +1525,117 @@ useBgLightblue();
 // components/Loading/index.tsx
 
 
+import Image from "next/image"
+import styles from "@/components/Loading/Loading.module.css";
+
+const Loading = () => {
+  return (
+    <div className={styles.loading}>
+      <div className={styles.loading_logo}>
+        <div className={styles.fadeUp}>
+          <Image
+            src="/logo.png"
+            alt="logo image"
+            width={200}
+            height={200}
+            priority
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export { Loading }
 ```
 
 ```css
 /* components/Loading/Loading.module.css */
 
+@charset "utf-8";
 
+/* ========= LoadingのためのCSS =============== */
+
+/* Loading背景画面設定　*/
+.loading {
+    /*fixedで全面に固定*/
+  position: fixed;
+  margin-top: -8px;
+  margin-left: -8px;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  background:#ccc;
+  text-align:center;
+}
+
+/* Loading画像中央配置　*/
+.loading_logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Loading アイコンの大きさ設定　*/
+.loading_logo img {
+  width: 250px;
+  height: 250px;
+}
+
+/* fadeUpをするアイコンの動き */
+
+.fadeUp{
+animation-name: fadeUpAnime;
+animation-duration: 1.0s;
+animation-fill-mode:forwards;
+opacity: 0;
+}
+
+@keyframes fadeUpAnime{
+  from {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 ```
 
 ```tsx
 // pages/index.tsx
 
+import styles from "@/styles/Home.module.css";
+import { Header } from "@/components/Header";
+import { Headline } from "@/components/Headline";
+import Image from "next/image"
+import { Loading } from "@/components/Loading";
 
+const Home = () => {
+  return (
+    <div>
+      <div className={styles.loading}>
+        <Loading />
+      </div>
+      <div className={styles.container}>
+        <Header />
+        <Headline title="今日のDOG" />
+        <Image
+          src="/dog.png"
+          alt="dog image"
+          width={300}
+          height={300}
+          priority
+        />
+      </div>
+    </div>
+  );
+};
+
+export default Home;
 ```
 
 - ここまで、一旦コミットします
