@@ -1660,26 +1660,186 @@ export default Home;
 
 - `pages/index.tsx`のホームコンポーネント`const Home = () => {}`の`return`には、現在、`<div className={styles.container}>`が呼び出されている
 - この`{styles.container}`が呼ばれる前に、`<Animation />`コンポーネントが呼ばれるようにすればよさそう、、？
-
-
-
-
-
-
-
-
-
-<br>
-
-**<font color="seablue">最後にindexページがフェードインしてくる</font>**
-
-- これ、実際は、前の画面の背景がフェードアウトすることによって、結果的に、indexページが徐々に現れるフェードインみたいな表現になる、、、ということだと思う
+- なお、***最後にindexページがフェードインしてくる*** に関しては、これ、実際は、前の画面の背景がフェードアウトすることによって、結果的に、indexページが徐々に現れるフェードインみたいな表現になる、、、ということだと思う
 - つまり、ロゴ画像の背景をフェードアウトさせればよいということだと思う
 - なので、フェードインするという実装は考えなくて良いはずだ
 
 
+<br>
+
+**<font color="seablue">3秒待機するというメソッドをJQuery無しでどうやって表現する？</font>**
+
+- まずは3秒待機するというメソッドをJQuery無しでどうやって表現する？
+- そっか、フェードアウト自体は、CSSでも出来るんだな
+- なので、待機するメソッドさえクリアできれば、Framer Motionなしでも実現できそう？
+- いや、、、まだわからない
+
+<br>
+
+使えそうなメソッドについていろいろ調べてみました。
+
+***タイマー関数***
+
+```tsx
+  setTimeout(() => {
+    console.log("こんにちは！３秒経ちました");
+  }, 3000);
+```
+
+<br>
+
+***ライブラリ「Framer Motion」***
+
+https://www.framer.com/motion/introduction/
+
+```terminal
+$ npm install framer-motion
+```
+
+```tsx
+import { motion } from "framer-motion"
+```
+
+```tsx
+
+```
+
+:::note warn
+`opacity: 1` は不透明
+`opacity: 0` は透明
 
 
+`display:none`は、CSSのプロパティの一つで、指定すると要素を完全に非表示にできる
+
+
+`transition-property` 変化対象のCSSプロパティを指定
+`transition-duration` 変化の時間
+`transition-timing-function` 変化の速度
+`transition-delay` 変化開始までの時間
+:::
+
+<br>
+
+**<font color="seablue">ひとまず完成</font>**
+
+- いろいろ沼にハマりましたが、なんとか期待する挙動にできました
+  - はじめにくるトップページに遷移したとき、ロゴ画像がフェードアップしながら現れ、3.5秒後にフェードアウト
+  - そして背景が再背面に移動し、トップページのメインコンテンツが現れる
+- 完璧とは言えませんが、今回はこれにて終了とします
+
+
+```tsx
+// ~/components/Loading/index.tsx
+
+import Image from "next/image"
+import styles from "@/components/Loading/Loading.module.css";
+
+const Loading = () => {
+  return (
+    <div className={styles.loading}>
+        <div className={styles.loading_logo}>
+          <div className={styles.fadeUp}>
+            <div className={styles.fadeOut}>
+                <Image
+                  src="/logo.png"
+                  alt="logo image"
+                  width={200}
+                  height={200}
+                  priority
+                />
+            </div>
+          </div>
+        </div>
+    </div>
+  );
+}
+
+export { Loading }
+```
+
+<br>
+
+```css
+/* ~/components/Loading/Loading.module.css */
+
+@charset "utf-8";
+
+/* ========= LoadingのためのCSS =============== */
+
+/* Loading背景画面設定　*/
+.loading {
+  /*fixedで全面に固定*/
+  position: fixed;
+  margin-top: -8px;
+  margin-left: -8px;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  background-color: #ccc;
+  text-align: center;
+  animation-name: fadeOutBgAnime;
+  animation-duration: 1000ms;
+  animation-fill-mode:forwards;
+  animation-delay: 5000ms;
+}
+
+/* 背景を再背面に移動し、メインコンテンツを前面に表示させるアニメーション*/
+@keyframes fadeOutBgAnime {
+  100% {
+    z-index: -1;
+  }
+}
+
+/* Loading画像中央配置　*/
+.loading_logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Loading アイコンの大きさ設定　*/
+.loading_logo img {
+  width: 250px;
+  height: 250px;
+}
+
+/* fadeUpをするアイコンの動き */
+.fadeUp {
+animation-name: fadeUpAnime;
+animation-duration: 1500ms;
+animation-fill-mode:forwards;
+opacity: 0;
+}
+
+@keyframes fadeUpAnime {
+  0% {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* fadeOutをするアイコンの動き */
+.fadeOut {
+  animation-name: fadeOutAnime;
+  animation-duration: 1000ms;
+  animation-fill-mode:forwards;
+  animation-delay: 3500ms;
+  opacity: 1;
+}
+
+@keyframes fadeOutAnime {
+  100% {
+    opacity: 0;
+    display: none;
+  }
+}
+```
 
 
 
