@@ -4,15 +4,25 @@
 
 /* Loading背景画面設定　*/
 .loading {
-    /*fixedで全面に固定*/
+  /*fixedで全面に固定*/
   position: fixed;
   margin-top: -8px;
   margin-left: -8px;
   width: 100%;
   height: 100%;
   z-index: 999;
-  background:#ccc;
-  text-align:center;
+  background-color: #ccc;
+  text-align: center;
+  animation-name: fadeOutBgAnime;
+  animation-duration: 1000ms;
+  animation-fill-mode:forwards;
+  animation-delay: 5000ms;
+}
+
+@keyframes fadeOutBgAnime {
+  100% {
+    z-index: -1;
+  }
 }
 
 /* Loading画像中央配置　*/
@@ -30,22 +40,37 @@
 }
 
 /* fadeUpをするアイコンの動き */
-
-.fadeUp{
+.fadeUp {
 animation-name: fadeUpAnime;
-animation-duration: 1.0s;
+animation-duration: 1500ms;
 animation-fill-mode:forwards;
 opacity: 0;
 }
 
-@keyframes fadeUpAnime{
-  from {
+@keyframes fadeUpAnime {
+  0% {
     opacity: 0;
     transform: translateY(100px);
   }
 
-  to {
+  100% {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* fadeOutをするアイコンの動き */
+.fadeOut {
+  animation-name: fadeOutAnime;
+  animation-duration: 1000ms;
+  animation-fill-mode:forwards;
+  animation-delay: 3500ms;
+  opacity: 1;
+}
+
+@keyframes fadeOutAnime {
+  100% {
+    opacity: 0;
+    display: none;
   }
 }
